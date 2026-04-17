@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Casino Job Center — Where the House Always Hires</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold: #C9A84C;
+    --gold-light: #E8C97A;
+    --gold-dim: #8A6F30;
+    --deep: #0A0A0F;
+    --surface: #111118;
+    --surface2: #1A1A24;
+    --surface3: #222230;
+    --text: #F0EAD6;
+    --text-muted: #8A8490;
+    --text-dim: #4A4658;
+    --crimson: #8B1A2E;
+    --crimson-light: #C13050;
+    --felt: #1A3A2A;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--deep);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* NOISE TEXTURE OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1000;
+    opacity: 0.4;
+  }
+
+  /* DIAGONAL STRIPE PATTERN */
+  .stripe-bg {
+    background-image: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 40px,
+      rgba(201, 168, 76, 0.015) 40px,
+      rgba(201, 168, 76, 0.015) 42px
+    );
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 3rem;
+    background: rgba(10, 10, 15, 0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(201, 168, 76, 0.15);
+  }
+
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 0.08em;
+    text-decoration: none;
+  }
+
+  .nav-logo span {
+    color: var(--text);
+    font-weight: 400;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--gold); }
+
+  .nav-cta {
+    background: var(--gold);
+    color: var(--deep) !important;
+    padding: 0.5rem 1.25rem;
+    border-radius: 2px;
+    font-weight: 500 !important;
+    transition: background 0.2s !important;
+  }
+
+  .nav-cta:hover { background: var(--gold-light) !important; color: var(--deep) !important; }
+
+  .nav-phone {
+    color: var(--gold);
+    text-decoration: none;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    font-weight: 500;
+    border-left: 1px solid rgba(201,168,76,0.25);
+    padding-left: 1.5rem;
+    margin-left: 0.5rem;
+  }
+  .nav-phone:hover { color: var(--gold-light); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    padding: 8rem 3rem 5rem;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 60% 50%, rgba(139, 26, 46, 0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 80% at 10% 80%, rgba(201, 168, 76, 0.06) 0%, transparent 60%),
+      var(--deep);
+  }
+
+  /* Playing card suit decorations */
+  .hero-suits {
+    position: absolute;
+    right: 5%;
+    top: 50%;
+    transform: translateY(-50%);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    opacity: 0.06;
+  }
+
+  .suit {
+    font-size: 8rem;
+    line-height: 1;
+    animation: floatSuit 8s ease-in-out infinite;
+  }
+
+  .suit:nth-child(2) { animation-delay: -2s; }
+  .suit:nth-child(3) { animation-delay: -4s; }
+  .suit:nth-child(4) { animation-delay: -6s; }
+
+  @keyframes floatSuit {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+  }
+
+  .hero-content {
+    max-width: 700px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+  }
+
+  .hero-eyebrow::before,
+  .hero-eyebrow::after {
+    content: '';
+    width: 2rem;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 6vw, 5.5rem);
+    font-weight: 900;
+    line-height: 1.05;
+    color: var(--text);
+    margin-bottom: 1.5rem;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    max-width: 520px;
+    margin-bottom: 3rem;
+    line-height: 1.8;
+  }
+
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    display: inline-block;
+    background: var(--gold);
+    color: var(--deep);
+    padding: 0.9rem 2.25rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: all 0.2s;
+    border: 2px solid var(--gold);
+  }
+
+  .btn-primary:hover {
+    background: transparent;
+    color: var(--gold);
+  }
+
+  .btn-secondary {
+    display: inline-block;
+    background: transparent;
+    color: var(--text);
+    padding: 0.9rem 2.25rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 400;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 2px;
+    border: 1px solid rgba(201, 168, 76, 0.3);
+    transition: all 0.2s;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 3rem;
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(201, 168, 76, 0.12);
+  }
+
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--gold);
+    display: block;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  /* SEARCH BAR */
+  .search-section {
+    background: var(--surface);
+    border-top: 1px solid rgba(201, 168, 76, 0.1);
+    border-bottom: 1px solid rgba(201, 168, 76, 0.1);
+    padding: 2.5rem 3rem;
+  }
+
+  .search-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    gap: 0;
+    background: var(--surface2);
+    border: 1px solid rgba(201, 168, 76, 0.25);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .search-field {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0 1.5rem;
+    border-right: 1px solid rgba(201, 168, 76, 0.15);
+  }
+
+  .search-field:last-of-type { border-right: none; }
+
+  .search-field svg {
+    opacity: 0.4;
+    flex-shrink: 0;
+  }
+
+  .search-field input,
+  .search-field select {
+    background: none;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    padding: 1.1rem 0;
+    width: 100%;
+  }
+
+  .search-field select option { background: var(--surface2); }
+
+  .search-btn {
+    background: var(--gold);
+    color: var(--deep);
+    border: none;
+    padding: 0 2rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+
+  .search-btn:hover { background: var(--gold-light); }
+
+  /* SECTIONS */
+  section {
+    padding: 6rem 3rem;
+  }
+
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-header {
+    margin-bottom: 3.5rem;
+  }
+
+  .section-eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .section-eyebrow::after {
+    content: '';
+    flex: 1;
+    max-width: 3rem;
+    height: 1px;
+    background: var(--gold);
+  }
+
+  h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.15;
+  }
+
+  h2 em { font-style: italic; color: var(--gold); }
+
+  /* JOB CATEGORIES */
+  .jobs-section { background: var(--surface); }
+
+  .categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5px;
+    background: rgba(201, 168, 76, 0.08);
+    border: 1px solid rgba(201, 168, 76, 0.08);
+  }
+
+  .cat-card {
+    background: var(--surface);
+    padding: 2rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    position: relative;
+    overflow: hidden;
+    text-decoration: none;
+    display: block;
+  }
+
+  .cat-card::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%;
+    height: 2px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+  }
+
+  .cat-card:hover { background: var(--surface2); }
+  .cat-card:hover::before { transform: scaleX(1); }
+
+  .cat-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .cat-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    color: var(--text);
+    margin-bottom: 0.4rem;
+  }
+
+  .cat-desc {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+
+  .cat-count {
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold-dim);
+  }
+
+  /* FEATURED JOBS */
+  .jobs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border: 1px solid rgba(201, 168, 76, 0.12);
+  }
+
+  .job-card {
+    background: var(--surface2);
+    padding: 1.75rem 2rem;
+    border-bottom: 1px solid rgba(201, 168, 76, 0.08);
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 1rem;
+    align-items: center;
+    cursor: pointer;
+    transition: background 0.2s;
+    text-decoration: none;
+  }
+
+  .job-card:last-child { border-bottom: none; }
+  .job-card:hover { background: var(--surface3); }
+
+  .job-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.05rem;
+    color: var(--text);
+    margin-bottom: 0.35rem;
+  }
+
+  .job-meta {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  .job-meta span {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .job-badge {
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.75rem;
+    border-radius: 2px;
+  }
+
+  .badge-new {
+    background: rgba(201, 168, 76, 0.15);
+    color: var(--gold);
+    border: 1px solid rgba(201, 168, 76, 0.3);
+  }
+
+  .badge-hot {
+    background: rgba(193, 48, 80, 0.15);
+    color: var(--crimson-light);
+    border: 1px solid rgba(193, 48, 80, 0.3);
+  }
+
+  .badge-vip {
+    background: rgba(139, 26, 46, 0.2);
+    color: #D4849A;
+    border: 1px solid rgba(139, 26, 46, 0.4);
+  }
+
+  .job-salary {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    color: var(--gold);
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  .job-salary-sub {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  /* WHY US */
+  .why-section { background: var(--surface); }
+
+  .why-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+  }
+
+  .why-items {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .why-item {
+    display: flex;
+    gap: 1.25rem;
+    align-items: flex-start;
+  }
+
+  .why-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: rgba(201, 168, 76, 0.15);
+    line-height: 1;
+    flex-shrink: 0;
+    width: 3rem;
+    text-align: right;
+  }
+
+  .why-text h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--text);
+    margin-bottom: 0.4rem;
+  }
+
+  .why-text p {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  /* Felt table visual */
+  .felt-card {
+    background: var(--felt);
+    border-radius: 16px;
+    padding: 3rem;
+    border: 2px solid rgba(201, 168, 76, 0.2);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .felt-card::before {
+    content: '';
+    position: absolute;
+    inset: 6px;
+    border: 1px dashed rgba(201, 168, 76, 0.15);
+    border-radius: 12px;
+    pointer-events: none;
+  }
+
+  .felt-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+  }
+
+  .felt-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    color: var(--gold);
+    font-style: italic;
+    margin-bottom: 2rem;
+  }
+
+  .chips-row {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .chip {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: 700;
+    font-family: 'Playfair Display', serif;
+    border: 3px dashed rgba(255,255,255,0.3);
+    position: relative;
+  }
+
+  .chip-gold { background: var(--gold); color: var(--deep); }
+  .chip-red { background: #8B1A2E; color: #F0EAD6; }
+  .chip-blue { background: #1A3060; color: #B0C4EE; }
+  .chip-green { background: #1A3A2A; color: #7EC89A; border-color: rgba(126,200,154,0.3); }
+
+  .felt-desc {
+    font-size: 0.85rem;
+    color: rgba(240, 234, 214, 0.6);
+    line-height: 1.8;
+  }
+
+  /* EMPLOYERS */
+  .employers-section { background: var(--deep); }
+
+  .logos-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0;
+    border: 1px solid rgba(201, 168, 76, 0.1);
+    margin-bottom: 3rem;
+  }
+
+  .logo-item {
+    flex: 1;
+    min-width: 160px;
+    padding: 2rem 1.5rem;
+    border-right: 1px solid rgba(201, 168, 76, 0.1);
+    border-bottom: 1px solid rgba(201, 168, 76, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.4;
+    transition: opacity 0.2s;
+    cursor: default;
+  }
+
+  .logo-item:hover { opacity: 0.8; }
+
+  .logo-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--text);
+    text-align: center;
+  }
+
+  .logo-sub {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-top: 0.2rem;
+    display: block;
+  }
+
+  /* TESTIMONIALS */
+  .testimonials-section { background: var(--surface); }
+
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .testi-card {
+    background: var(--surface2);
+    padding: 2rem;
+    border-left: 2px solid var(--gold);
+  }
+
+  .testi-quote {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 0.95rem;
+    color: var(--text);
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+  }
+
+  .testi-author {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  .testi-author strong {
+    color: var(--gold);
+    font-weight: 500;
+    display: block;
+    font-family: 'Playfair Display', serif;
+    font-size: 0.9rem;
+    font-style: normal;
+  }
+
+  /* CTA */
+  .cta-section {
+    background: var(--deep);
+    padding: 6rem 3rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 70% 60% at 50% 50%, rgba(201, 168, 76, 0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .cta-section h2 {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    margin-bottom: 1.25rem;
+  }
+
+  .cta-section p {
+    color: var(--text-muted);
+    max-width: 480px;
+    margin: 0 auto 2.5rem;
+    font-size: 1rem;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--surface);
+    border-top: 1px solid rgba(201, 168, 76, 0.12);
+    padding: 4rem 3rem 2rem;
+  }
+
+  .footer-grid {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.8fr 1fr 1fr 1fr;
+    gap: 3rem;
+    margin-bottom: 3rem;
+    padding-bottom: 3rem;
+    border-bottom: 1px solid rgba(201, 168, 76, 0.1);
+  }
+
+  .footer-brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+
+  .footer-brand span { color: var(--text); font-weight: 400; }
+
+  .footer-desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.8;
+  }
+
+  .footer-col h4 {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.25rem;
+  }
+
+  .footer-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .footer-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: color 0.2s;
+  }
+
+  .footer-links a:hover { color: var(--gold); }
+
+  .footer-bottom {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.78rem;
+    color: var(--text-dim);
+  }
+
+  /* DIVIDER */
+  .gold-divider {
+    width: 3rem;
+    height: 1px;
+    background: var(--gold);
+    margin: 1.25rem 0;
+  }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .hero { padding: 7rem 1.5rem 4rem; }
+    section { padding: 4rem 1.5rem; }
+    .search-section { padding: 1.5rem; }
+    .search-wrap { flex-direction: column; border-radius: 3px; }
+    .search-field { border-right: none; border-bottom: 1px solid rgba(201, 168, 76, 0.15); }
+    .search-btn { padding: 1rem; }
+    .why-grid { grid-template-columns: 1fr; }
+    .testimonials-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+    .footer-bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
+    .hero-stats { gap: 1.5rem; flex-wrap: wrap; }
+    .hero-suits { display: none; }
+    .categories-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 600px) {
+    .categories-grid { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .job-card { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body class="stripe-bg">
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Casino<span>JobCenter</span></a>
+  <ul class="nav-links">
+    <li><a href="#jobs">Browse Jobs</a></li>
+    <li><a href="#categories">Categories</a></li>
+    <li><a href="#employers">Employers</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#post" class="nav-cta">Post a Job</a></li>
+  </ul>
+  <a href="tel:+17022519675" class="nav-phone">+1 (702) 251-9675</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg"></div>
+  <div class="hero-suits">
+    <div class="suit">♠</div>
+    <div class="suit">♥</div>
+    <div class="suit">♣</div>
+    <div class="suit">♦</div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">The Premier Casino Career Network</div>
+    <h1>Where the House<br><em>Always Hires</em></h1>
+    <p class="hero-sub">Connect with top casinos, resorts, and gaming establishments worldwide. From the pit floor to the executive suite — your next career move starts here.</p>
+    <div class="hero-actions">
+      <a href="#jobs" class="btn-primary">Browse Openings</a>
+      <a href="#post" class="btn-secondary">Post a Job</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <span class="stat-num">4,200+</span>
+        <span class="stat-label">Active Listings</span>
+      </div>
+      <div>
+        <span class="stat-num">850+</span>
+        <span class="stat-label">Casino Partners</span>
+      </div>
+      <div>
+        <span class="stat-num">38K</span>
+        <span class="stat-label">Placements Made</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SEARCH -->
+<div class="search-section" id="search">
+  <div class="search-wrap">
+    <div class="search-field" style="flex:2">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" placeholder="Job title, keyword, or skill…" style="color: #F0EAD6;">
+    </div>
+    <div class="search-field">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+      <select>
+        <option value="">All Locations</option>
+        <option>Las Vegas, NV</option>
+        <option>Atlantic City, NJ</option>
+        <option>Macau, China</option>
+        <option>Monte Carlo</option>
+        <option>Singapore</option>
+        <option>London, UK</option>
+        <option>Mississippi Gulf Coast</option>
+        <option>Tribal Casinos</option>
+      </select>
+    </div>
+    <div class="search-field">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+      <select>
+        <option value="">All Departments</option>
+        <option>Table Games</option>
+        <option>Slots & Gaming</option>
+        <option>Cage & Finance</option>
+        <option>Surveillance</option>
+        <option>Hotel & Hospitality</option>
+        <option>Food & Beverage</option>
+        <option>Security</option>
+        <option>Management</option>
+      </select>
+    </div>
+    <button class="search-btn">Find Jobs →</button>
+  </div>
+</div>
+
+<!-- CATEGORIES -->
+<section class="jobs-section" id="categories">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">Browse by Role</div>
+      <h2>Every Position<br><em>Under the Chandelier</em></h2>
+    </div>
+
+    <div class="categories-grid">
+      <a href="#" class="cat-card">
+        <span class="cat-icon">🃏</span>
+        <div class="cat-title">Table Games</div>
+        <p class="cat-desc">Dealers, pit bosses, floor supervisors, and game trainers for blackjack, poker, roulette, baccarat, and more.</p>
+        <div class="cat-count">1,240 open roles</div>
+      </a>
+      <a href="#" class="cat-card">
+        <span class="cat-icon">🎰</span>
+        <div class="cat-title">Slots & Electronic Gaming</div>
+        <p class="cat-desc">Slot technicians, attendants, and electronic game supervisors keeping the reels spinning 24/7.</p>
+        <div class="cat-count">890 open roles</div>
+      </a>
+      <a href="#" class="cat-card">
+        <span class="cat-icon">🏦</span>
+        <div class="cat-title">Cage & Finance</div>
+        <p class="cat-desc">Cashiers, cage supervisors, count room staff, and financial compliance specialists.</p>
+        <div class="cat-count">340 open roles</div>
+      </a>
+      <a href="#" class="cat-card">
+        <span class="cat-icon">👁</span>
+        <div class="cat-title">Surveillance & Security</div>
+        <p class="cat-desc">Surveillance operators, security officers, investigators, and gaming compliance agents.</p>
+        <div class="cat-count">510 open roles</div>
+      </a>
+      <a href="#" class="cat-card">
+        <span class="cat-icon">🍾</span>
+        <div class="cat-title">Food & Beverage</div>
+        <p class="cat-desc">Chefs, bartenders, servers, sommeliers, and F&B managers for world-class casino dining.</p>
+        <div class="cat-count">620 open roles</div>
+      </a>
+      <a href="#" class="cat-card">
+        <span class="cat-icon">🏨</span>
+        <div class="cat-title">Hotel & Resort</div>
+        <p class="cat-desc">Front desk, concierge, housekeeping, and resort management roles at integrated casino properties.</p>
+        <div class="cat-count">480 open roles</div>
+      </a>
+      <a href="#" class="cat-card">
+        <span class="cat-icon">📊</span>
+        <div class="cat-title">Marketing & Player Development</div>
+        <p class="cat-desc">Casino host, VIP services, loyalty program management, and digital marketing specialists.</p>
+        <div class="cat-count">215 open roles</div>
+      </a>
+      <a href="#" class="cat-card">
+        <span class="cat-icon">⚙️</span>
+        <div class="cat-title">Executive & Management</div>
+        <p class="cat-desc">General managers, directors of operations, compliance officers, and C-suite gaming executives.</p>
+        <div class="cat-count">95 open roles</div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURED JOBS -->
+<section style="background: var(--deep); padding: 6rem 3rem;" id="jobs">
+  <div class="container">
+    <div class="section-header" style="display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:1rem;">
+      <div>
+        <div class="section-eyebrow">Featured Openings</div>
+        <h2>Tonight's<br><em>Best Deals</em></h2>
+      </div>
+      <a href="#" class="btn-secondary" style="align-self:flex-end">View All 4,200+ Jobs →</a>
+    </div>
+
+    <div class="jobs-list">
+      <a href="#" class="job-card">
+        <div>
+          <div class="job-title">Senior Blackjack Dealer — High Limit Room</div>
+          <div class="job-meta">
+            <span>🏙 Bellagio, Las Vegas NV</span>
+            <span>⏱ Full-Time</span>
+            <span class="job-badge badge-vip">VIP Property</span>
+          </div>
+        </div>
+        <div>
+          <div class="job-salary">$52K–$68K</div>
+          <div class="job-salary-sub">+ tips & gratuity</div>
+        </div>
+      </a>
+      <a href="#" class="job-card">
+        <div>
+          <div class="job-title">Surveillance Analyst – Real-Time Monitoring</div>
+          <div class="job-meta">
+            <span>🌊 Borgata, Atlantic City NJ</span>
+            <span>⏱ Full-Time</span>
+            <span class="job-badge badge-new">New</span>
+          </div>
+        </div>
+        <div>
+          <div class="job-salary">$48K–$60K</div>
+          <div class="job-salary-sub">benefits included</div>
+        </div>
+      </a>
+      <a href="#" class="job-card">
+        <div>
+          <div class="job-title">Cage Supervisor – Night Shift Lead</div>
+          <div class="job-meta">
+            <span>🎲 Wynn Resorts, Las Vegas NV</span>
+            <span>⏱ Full-Time</span>
+            <span class="job-badge badge-hot">Urgently Hiring</span>
+          </div>
+        </div>
+        <div>
+          <div class="job-salary">$58K–$74K</div>
+          <div class="job-salary-sub">shift differentials</div>
+        </div>
+      </a>
+      <a href="#" class="job-card">
+        <div>
+          <div class="job-title">Director of Table Games Operations</div>
+          <div class="job-meta">
+            <span>🌴 MGM National Harbor, MD</span>
+            <span>⏱ Full-Time</span>
+            <span class="job-badge badge-vip">VIP Property</span>
+          </div>
+        </div>
+        <div>
+          <div class="job-salary">$95K–$130K</div>
+          <div class="job-salary-sub">equity + bonus</div>
+        </div>
+      </a>
+      <a href="#" class="job-card">
+        <div>
+          <div class="job-title">Slot Technician III – Electronic Systems</div>
+          <div class="job-meta">
+            <span>🏔 Talking Stick Resort, AZ</span>
+            <span>⏱ Full-Time</span>
+            <span class="job-badge badge-new">New</span>
+          </div>
+        </div>
+        <div>
+          <div class="job-salary">$45K–$58K</div>
+          <div class="job-salary-sub">housing assistance</div>
+        </div>
+      </a>
+      <a href="#" class="job-card">
+        <div>
+          <div class="job-title">VIP Casino Host – Player Development</div>
+          <div class="job-meta">
+            <span>🎰 Caesars Palace, Las Vegas NV</span>
+            <span>⏱ Full-Time</span>
+            <span class="job-badge badge-hot">Urgently Hiring</span>
+          </div>
+        </div>
+        <div>
+          <div class="job-salary">$65K–$90K</div>
+          <div class="job-salary-sub">+ commissions</div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section class="why-section" id="about">
+  <div class="container">
+    <div class="why-grid">
+      <div>
+        <div class="section-eyebrow">Why Casino Job Center</div>
+        <h2>The Odds Are<br><em>In Your Favor</em></h2>
+        <div class="gold-divider"></div>
+        <div class="why-items">
+          <div class="why-item">
+            <div class="why-num">01</div>
+            <div class="why-text">
+              <h3>Gaming-Exclusive Specialization</h3>
+              <p>We don't just post jobs — we speak the language. Licensed dealers, GCB-certified candidates, and compliance-savvy hires matched to the right properties.</p>
+            </div>
+          </div>
+          <div class="why-item">
+            <div class="why-num">02</div>
+            <div class="why-text">
+              <h3>Verified Casino Partners</h3>
+              <p>Every employer on our platform is a vetted, licensed gaming operator. No scams, no non-casino listings hijacking your search results.</p>
+            </div>
+          </div>
+          <div class="why-item">
+            <div class="why-num">03</div>
+            <div class="why-text">
+              <h3>24/7 Gaming-Hours Support</h3>
+              <p>The casino floor never sleeps, and neither does our team. Real support around the clock for a 24-hour industry.</p>
+            </div>
+          </div>
+          <div class="why-item">
+            <div class="why-num">04</div>
+            <div class="why-text">
+              <h3>Background Check Coordination</h3>
+              <p>We streamline gaming license verification and background checks so candidates and properties can move faster through the hiring process.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="felt-card">
+          <div class="felt-content">
+            <div class="felt-title">All Bets on Your Career</div>
+            <div class="chips-row">
+              <div class="chip chip-gold">$</div>
+              <div class="chip chip-red">♥</div>
+              <div class="chip chip-blue">★</div>
+              <div class="chip chip-green">♣</div>
+            </div>
+            <p class="felt-desc">From your first dealer audition to a C-suite role at a Forbes Five Star resort, Casino Job Center has placed over 38,000 professionals at gaming properties on six continents.</p>
+            <div style="margin-top:2rem; padding-top:1.5rem; border-top:1px solid rgba(201,168,76,0.15);">
+              <div style="display:flex; justify-content:space-around; text-align:center;">
+                <div>
+                  <div style="font-family:'Playfair Display',serif; font-size:1.6rem; color:var(--gold-light);">92%</div>
+                  <div style="font-size:0.7rem; letter-spacing:0.1em; text-transform:uppercase; color:rgba(240,234,214,0.5); margin-top:0.25rem;">Placement rate</div>
+                </div>
+                <div>
+                  <div style="font-family:'Playfair Display',serif; font-size:1.6rem; color:var(--gold-light);">18 days</div>
+                  <div style="font-size:0.7rem; letter-spacing:0.1em; text-transform:uppercase; color:rgba(240,234,214,0.5); margin-top:0.25rem;">Avg. time to hire</div>
+                </div>
+                <div>
+                  <div style="font-family:'Playfair Display',serif; font-size:1.6rem; color:var(--gold-light);">6</div>
+                  <div style="font-size:0.7rem; letter-spacing:0.1em; text-transform:uppercase; color:rgba(240,234,214,0.5); margin-top:0.25rem;">Continents served</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EMPLOYERS -->
+<section class="employers-section" id="employers">
+  <div class="container">
+    <div class="section-header" style="text-align:center;">
+      <div class="section-eyebrow" style="justify-content:center;">Trusted by Leading Operators</div>
+      <h2>The World's <em>Finest Houses</em></h2>
+    </div>
+
+    <div class="logos-row">
+      <div class="logo-item">
+        <div><div class="logo-text">MGM Resorts</div><span class="logo-sub">International</span></div>
+      </div>
+      <div class="logo-item">
+        <div><div class="logo-text">Caesars</div><span class="logo-sub">Entertainment</span></div>
+      </div>
+      <div class="logo-item">
+        <div><div class="logo-text">Wynn</div><span class="logo-sub">Resorts Ltd.</span></div>
+      </div>
+      <div class="logo-item">
+        <div><div class="logo-text">Hard Rock</div><span class="logo-sub">International</span></div>
+      </div>
+      <div class="logo-item">
+        <div><div class="logo-text">Las Vegas Sands</div><span class="logo-sub">Corp</span></div>
+      </div>
+      <div class="logo-item">
+        <div><div class="logo-text">Mohegan</div><span class="logo-sub">Tribal Gaming</span></div>
+      </div>
+    </div>
+
+    <div style="text-align:center;">
+      <a href="#post" class="btn-primary">Post a Job Opening</a>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials-section">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-eyebrow">Straight from the Floor</div>
+      <h2>Players Who <em>Hit It Big</em></h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testi-card">
+        <p class="testi-quote">"After 10 years dealing blackjack locally, Casino Job Center connected me with a position at a Macau property I never could have found on my own. The salary doubled overnight."</p>
+        <div class="testi-author">
+          <strong>Marcus D.</strong>
+          Senior Dealer — Studio City, Macau
+        </div>
+      </div>
+      <div class="testi-card">
+        <p class="testi-quote">"We filled three hard-to-place surveillance positions within two weeks. The quality of candidates who understand gaming compliance from day one is unmatched on any other platform."</p>
+        <div class="testi-author">
+          <strong>Renata V.</strong>
+          HR Director — Foxwoods Resort Casino
+        </div>
+      </div>
+      <div class="testi-card">
+        <p class="testi-quote">"The gaming license coordination alone saved me three weeks. They know exactly what tribal commissions need and had everything in order before my first interview."</p>
+        <div class="testi-author">
+          <strong>Tyler K.</strong>
+          Pit Supervisor — Seminole Hard Rock, FL
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="post">
+  <div style="position:relative; z-index:1;">
+    <div class="section-eyebrow" style="justify-content:center;">Ready to Play?</div>
+    <h2>Place Your <em>Best Bet</em></h2>
+    <p>Whether you're looking for your next role or your next star hire — the table is open.</p>
+    <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+      <a href="#" class="btn-primary">Search All Jobs</a>
+      <a href="#" class="btn-secondary">Post a Position</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand">Casino<span>JobCenter</span></div>
+      <p class="footer-desc">The gaming industry's dedicated career marketplace since 2005. Connecting licensed professionals with world-class properties across six continents.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Job Seekers</h4>
+      <ul class="footer-links">
+        <li><a href="#">Browse Jobs</a></li>
+        <li><a href="#">Upload Resume</a></li>
+        <li><a href="#">Career Advice</a></li>
+        <li><a href="#">License Guide</a></li>
+        <li><a href="#">Salary Data</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Employers</h4>
+      <ul class="footer-links">
+        <li><a href="#">Post a Job</a></li>
+        <li><a href="#">Resume Database</a></li>
+        <li><a href="#">Bulk Hiring</a></li>
+        <li><a href="#">Pricing</a></li>
+        <li><a href="#">Success Stories</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Company</h4>
+      <ul class="footer-links">
+        <li><a href="#">About Us</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="#">Press</a></li>
+        <li><a href="#">Privacy Policy</a></li>
+        <li><a href="#">Terms of Use</a></li>
+      </ul>
+      <div style="margin-top:1.5rem;">
+        <h4 style="margin-bottom:0.5rem;">Call Us</h4>
+        <a href="tel:+17022519675" style="color:var(--gold); text-decoration:none; font-size:0.95rem; letter-spacing:0.05em;">+1 (702) 251-9675</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 Casino Job Center. All rights reserved.</span>
+    <span>Las Vegas · Atlantic City · Macau · London · Singapore</span>
+  </div>
+</footer>
+
+</body>
+</html>
